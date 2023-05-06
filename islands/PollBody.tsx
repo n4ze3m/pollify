@@ -18,17 +18,15 @@ const PollBody = ({
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-
   useEffect(() => {
     const url = window.location.href;
     const selectedOption = localStorage.getItem(url);
     setSelectedOption(selectedOption);
   }, [isAlreadyVoted]);
 
-
   const handleOptionSelect = async (option: string) => {
     if (isAlreadyVoted) {
-      return; 
+      return;
     }
 
     setSelectedOption(option);
@@ -47,6 +45,9 @@ const PollBody = ({
   };
 
   const getOptionPercentage = (option: string) => {
+    if (!selectedOption) {
+      return "";
+    }
     const voteCount = votes[option] || 0;
     return totalVotes > 0
       ? ((voteCount / totalVotes) * 100).toFixed(2)
@@ -70,19 +71,26 @@ const PollBody = ({
             >
               <div className="flex justify-between items-center">
                 <span>{option}</span>
-                <span
-                  className={`text-sm ${
-                    option === selectedOption ? "text-white" : "text-gray-500"
-                  }`}
-                >
-                  {getOptionPercentage(option) + "%"}
-                </span>
+                {selectedOption && (
+                  <span
+                    className={`text-sm ${
+                      option === selectedOption ? "text-white" : "text-gray-500"
+                    }`}
+                  >
+                    {getOptionPercentage(option) + "%"}
+                  </span>
+                )}
               </div>
-              <div className="h-1 mt-1 rounded-lg bg-blue-100">
-                <div
-                className={`h-full rounded-lg ${
-                  selectedOption === option ? "bg-blue-800" : "bg-blue-200"
+              <div
+                className={`h-1 mt-1 rounded-lg bg-blue-100 ${
+                  !isAlreadyVoted && "hidden"
                 }`}
+              >
+                <div
+                  className={`h-full rounded-lg ${
+                    selectedOption === option ? "bg-blue-800" : "bg-blue-200"
+                  }
+                  `}
                   style={{ width: `${getOptionPercentage(option)}%` }}
                 />
               </div>
