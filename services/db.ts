@@ -17,10 +17,10 @@ export const createPoll = async (poll: Poll): Promise<string> => {
   const id = generateRandomHash();
   const data = {
     ...poll,
-    votes: poll.options.reduce((acc, option) => {
-      acc[option] = 0;
-      return acc;
-    }, {} as Record<string, number>),
+    votes: poll.options.map((option, index) => ({ [`${option}-${index}`]: 0 }))
+      .reduce((a, b) => {
+        return { ...a, ...b };
+      }, {} as Record<string, number>),
   };
   await db.set(["polls", id], data);
   return id;
@@ -45,5 +45,5 @@ export const getAllPolls = async () => {
   const iter = await db.list<string>({ prefix: ["polls"] });
   const polls = [];
   for await (const res of iter) polls.push(res);
-  return polls.length
+  return polls.length;
 };

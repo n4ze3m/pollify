@@ -24,17 +24,17 @@ const PollBody = ({
     setSelectedOption(selectedOption);
   }, [isAlreadyVoted]);
 
-  const handleOptionSelect = async (option: string) => {
+  const handleOptionSelect = async (option: string, index: number) => {
     if (isAlreadyVoted) {
       return;
     }
 
-    setSelectedOption(option);
+    setSelectedOption(`${option}-${index}`);
 
     setIsProcessing(true);
     const url = window.location.href;
-    localStorage.setItem(url, option);
-    const body = JSON.stringify({ option });
+    localStorage.setItem(url, `${option}-${index}`);
+    const body = JSON.stringify({ option: `${option}-${index}` });
 
     await fetch(url, {
       method: "POST",
@@ -44,11 +44,11 @@ const PollBody = ({
     window.location.reload();
   };
 
-  const getOptionPercentage = (option: string) => {
+  const getOptionPercentage = (option: string, index: number) => {
     if (!selectedOption) {
       return "";
     }
-    const voteCount = votes[option] || 0;
+    const voteCount = votes[`${option}-${index}`] || 0;
     return totalVotes > 0
       ? ((voteCount / totalVotes) * 100).toFixed(2)
       : "0.00";
@@ -58,13 +58,13 @@ const PollBody = ({
     <div className="max-w-md mx-auto p-4 bg-white border border-gray-300 rounded shadow-sm">
       <h2 className="text-lg font-medium">{question}</h2>
       <ul className="mt-4 space-y-2">
-        {options.map((option) => (
+        {options.map((option, index) => (
           <li key={option}>
             <button
-              onClick={() => handleOptionSelect(option)}
+              onClick={() => handleOptionSelect(option, index)}
               disabled={isAlreadyVoted || isProcessing}
               className={`w-full p-2 rounded-lg ${
-                selectedOption === option
+                selectedOption === `${option}-${index}`
                   ? "bg-blue-500 text-white hover:bg-blue-600"
                   : "bg-gray-100 text-gray-800 hover:bg-gray-200"
               } focus:outline-none`}
@@ -74,10 +74,12 @@ const PollBody = ({
                 {selectedOption && (
                   <span
                     className={`text-sm ${
-                      option === selectedOption ? "text-white" : "text-gray-500"
+                      selectedOption === `${option}-${index}`
+                        ? "text-white"
+                        : "text-gray-500"
                     }`}
                   >
-                    {getOptionPercentage(option) + "%"}
+                    {getOptionPercentage(option, index) + "%"}
                   </span>
                 )}
               </div>
@@ -88,10 +90,12 @@ const PollBody = ({
               >
                 <div
                   className={`h-full rounded-lg ${
-                    selectedOption === option ? "bg-blue-800" : "bg-blue-200"
+                    selectedOption === `${option}-${index}`
+                      ? "bg-blue-800"
+                      : "bg-blue-200"
                   }
                   `}
-                  style={{ width: `${getOptionPercentage(option)}%` }}
+                  style={{ width: `${getOptionPercentage(option, index)}%` }}
                 />
               </div>
             </button>
