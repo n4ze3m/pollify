@@ -19,7 +19,7 @@ function Layout({ children }: LayoutProps) {
           </span>
         </a>
         <a
-          href="https://github.com/your-github-repo"
+          href="https://github.com/n4ze3m/pollify"
           target="_blank"
           rel="noopener noreferrer"
           class={"text-gray-500 hover:text-gray-700"}
