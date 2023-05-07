@@ -64,7 +64,7 @@ const PollBody = ({
               onClick={() => handleOptionSelect(option, index)}
               disabled={isAlreadyVoted || isProcessing}
               className={`w-full p-2 rounded-lg ${
-                selectedOption === `${option}-${index}`
+                isAlreadyVoted && selectedOption === `${option}-${index}`
                   ? "bg-blue-500 text-white hover:bg-blue-600"
                   : "bg-gray-100 text-gray-800 hover:bg-gray-200"
               } focus:outline-none`}
@@ -74,7 +74,7 @@ const PollBody = ({
                 {selectedOption && (
                   <span
                     className={`text-sm ${
-                      selectedOption === `${option}-${index}`
+                      isAlreadyVoted && selectedOption === `${option}-${index}`
                         ? "text-white"
                         : "text-gray-500"
                     }`}
@@ -90,7 +90,7 @@ const PollBody = ({
               >
                 <div
                   className={`h-full rounded-lg ${
-                    selectedOption === `${option}-${index}`
+                    isAlreadyVoted && selectedOption === `${option}-${index}`
                       ? "bg-blue-800"
                       : "bg-blue-200"
                   }

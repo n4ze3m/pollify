@@ -23,6 +23,7 @@ export const handler: Handlers = {
       ...poll,
       totalVotes,
       isAlreadyVoted: isVoted,
+      votes: isVoted ? poll.votes : {},
     });
   },
 
